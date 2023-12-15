@@ -91,7 +91,7 @@ app.post('/angka', async(req, res) =>{
     }
 })
 
-mongoose.connect('mongodb+srv://Is-able:Zum59gceKysGNOxF@isable-cluster.fcqmgd9.mongodb.net/Isable?retryWrites=true&w=majority')
+
 .then(() =>{
     console.log('Connected to mongoDB')
     app.listen(5000, ()=> {
