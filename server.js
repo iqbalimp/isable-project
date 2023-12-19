@@ -7,7 +7,7 @@ const app = express()
 
 app.use(express.json())
 
-mongoose.connect('mongodb+srv://Is-able:yp456AulqxZshJah@isable-cluster.fcqmgd9.mongodb.net/Isable?retryWrites=true&w=majority')
+
 .then(() =>{
     console.log('Connected to mongoDB')
     app.listen(5000, ()=> {
