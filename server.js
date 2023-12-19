@@ -2,11 +2,21 @@ const express = require('express')
 const mongoose = require('mongoose')
 const Abjad = require('./models/abjadModel')
 const Angka = require('./models/angkaModel')
+const Map = require('./models/mapModel')
 const app = express()
 
 app.use(express.json())
 
-//routes
+mongoose.connect('mongodb+srv://Is-able:yp456AulqxZshJah@isable-cluster.fcqmgd9.mongodb.net/Isable?retryWrites=true&w=majority')
+.then(() =>{
+    console.log('Connected to mongoDB')
+    app.listen(5000, ()=> {
+        console.log(`Isable running on 5000`)
+    })
+}).catch((error) => {
+    console.log(error)
+})
+
 app.get("/", (req,res) =>{
     res.send('Hello Isable')
 })
@@ -91,12 +101,58 @@ app.post('/angka', async(req, res) =>{
     }
 })
 
+//GET all Map
+app.get('/map', async(req, res) => {
+    try {
+        const map = await Map.find({});
+        res.status(200).json(map)
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+})
 
-.then(() =>{
-    console.log('Connected to mongoDB')
-    app.listen(5000, ()=> {
-        console.log(`Isable running on 5000`)
-    })
-}).catch((error) => {
-    console.log(error)
+//GET berdasarkan provinsi Map
+app.get('/map/provinsi/:provinsi', async (req, res) => {
+    try {
+        const { provinsi } = req.params;
+        const map = await Map.find({ provinsi });
+
+        if (!map) {
+            return res.status(404).json({ message: 'Provinsi not found' });
+        }
+
+        res.status(200).json(map);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+//GET berdasarkan kota Map
+app.get('/map/kota/:kota', async (req, res) => {
+    try {
+        const { kota } = req.params;
+        const map = await Map.find({ kota });
+
+        if (!map) {
+            return res.status(404).json({ message: 'Kota not found' });
+        }
+
+        res.status(200).json(map);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+//POST ke table maps
+app.post('/map', async(req, res) =>{
+    try {
+        const map = await Map.create(req.body)
+        res.status(200).json(map);
+        
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({message: error.message});
+    }
 })
